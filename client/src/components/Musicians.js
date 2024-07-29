@@ -1,18 +1,21 @@
 import React, { Component, Fragment } from 'react';
 import Musician from './Musician';
-import axios from "axios";
+import axios from 'axios';
 const config = require('../config.json');
 
 export default class Musicians extends Component {
-
   state = {
     newmusician: null,
     musicians: []
   }
 
-  fetchMusicians = () => {
-    // add call to AWS API Gateway to fetch musicians here
-    // then set them in state
+  fetchMusicians = async () => {
+    try {
+      const response = await axios.get(config.api.invokeUrl + '/musicians'); // Substitua pela sua URL válida da API Gateway
+      this.setState({ musicians: response.data });
+    } catch (error) {
+      console.error('Erro ao buscar músicos:', error);
+    }
   }
 
   componentDidMount = () => {
@@ -30,11 +33,13 @@ export default class Musicians extends Component {
             <div className="columns">
               <div className="column">
                 <div className="tile is-ancestor">
-                    { 
-                      this.state.musicians && this.state.musicians.length > 0
-                      ? this.state.musicians.map(musician => <Musician name={musician.musicianname} id={musician.id} key={musician.id} />)
-                      : <div className="tile notification is-warning">No musicians available</div>
-                    }
+                  { 
+                    this.state.musicians && this.state.musicians.length > 0
+                    ? this.state.musicians.map(musician => (
+                        <Musician name={musician.musicianname} id={musician.id} key={musician.id} />
+                      ))
+                    : <div className="tile notification is-warning">No musicians available</div>
+                  }
                 </div>
               </div>
             </div>

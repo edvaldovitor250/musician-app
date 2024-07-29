@@ -3,7 +3,6 @@ const initialStoreData = require('../store/data');
 const Musician = require('./musician');
 
 beforeAll(done => {
-  // initialize store
   musician = new Musician(store);
   musician.initStore(initialStoreData);
   done();
